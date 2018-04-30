@@ -20,6 +20,12 @@ BACKUP_VOL="${CONTAINER_NAME?}-backup"
 
 ${DIR?}/cleanup.sh
 ${DIR?}/../../ssl-creator.sh "testuser@crunchydata.com" "${CONTAINER_NAME?}" "$(PWD)"
+if [[ $? -ne 0 ]]
+then
+    echo_err "Failed to create certs, exiting.."
+    exit 1
+fi
+
 cp ${DIR?}/certs/* ${DIR?}/configs
 
 echo "Starting the ${CONTAINER_NAME} example..."
