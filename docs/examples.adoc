@@ -92,7 +92,13 @@ To connect via IP, `sslmode` can be changed to `require`.
 psql postgresql://IP_OF_PGSQL:5432/postgres?sslmode=require -U testuser"
 ....
 
-Run the PostgreSQL example as follows:
+This example can be run as follows for the Docker environment:
+....
+cd $CCPROOT/examples/docker/custom-config-ssl
+./run.sh
+....
+
+And the example can be run in the following directory for the Kubernetes and OpenShift environments:
 ....
 cd $CCPROOT/examples/kube/custom-config-ssl
 ./run.sh
