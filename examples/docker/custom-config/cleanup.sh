@@ -24,17 +24,3 @@ BACKUP_VOL="${CONTAINER_NAME?}-backup"
 docker stop ${CONTAINER_NAME?}
 docker rm ${CONTAINER_NAME}
 docker volume rm ${PGDATA_VOL?} ${PGWAL_VOL?} ${BACKUP_VOL?}
-
-if [[ -d ${DIR?}/certs ]]
-then
-    rm -rf ${DIR?}/certs
-fi
-
-if [[ -d ${DIR?}/out ]]
-then
-    rm -rf ${DIR?}/out
-fi
-
-rm -f ${DIR?}/configs/*.key
-rm -f ${DIR?}/configs/*.crt
-rm -f ${DIR?}/configs/*.crl

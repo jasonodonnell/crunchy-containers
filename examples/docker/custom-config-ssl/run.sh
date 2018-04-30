@@ -14,17 +14,17 @@
 # limitations under the License.
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-CONTAINER_NAME='custom-config'
+CONTAINER_NAME='custom-config-ssl'
 PGDATA_VOL="${CONTAINER_NAME?}-pgdata"
-PGWAL_VOL="${CONTAINER_NAME?}-wal"
 BACKUP_VOL="${CONTAINER_NAME?}-backup"
 
 ${DIR?}/cleanup.sh
+${DIR?}/../../ssl-creator.sh "testuser@crunchydata.com" "${CONTAINER_NAME?}" "$(PWD)"
+cp ${DIR?}/certs/* ${DIR?}/configs
 
 echo "Starting the ${CONTAINER_NAME} example..."
 
 docker volume create --driver local --name=${PGDATA_VOL?}
-docker volume create --driver local --name=${PGWAL_VOL?}
 docker volume create --driver local --name=${BACKUP_VOL?}
 
 docker run \
@@ -33,7 +33,6 @@ docker run \
     --publish=5432:5432 \
     --volume=${DIR?}/configs:/pgconf \
     --volume=${PGDATA_VOL?}:/pgdata \
-    --volume=${PGWAL_VOL?}:/pgwal \
     --volume=${BACKUP_VOL?}:/backrestrepo \
     --env=PG_MODE=primary \
     --env=PG_PRIMARY_USER=primaryuser \
@@ -46,3 +45,9 @@ docker run \
     --env=PG_ROOT_PASSWORD=password \
     --env=XLORDIR=true \
     --detach crunchydata/crunchy-postgres:centos7-10.3-1.8.2
+
+echo ""
+echo "To connect via SSL, run the following once the DB is ready: "
+echo "source ./env.sh"
+echo "psql postgresql://0.0.0.0:5432/postgres?sslmode=require -U testuser"
+echo ""

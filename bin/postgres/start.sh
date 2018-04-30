@@ -34,6 +34,7 @@ function trap_sigterm() {
 
 trap 'trap_sigterm' SIGINT SIGTERM
 
+source /opt/cpm/bin/setenv.sh
 source check-for-secrets.sh
 
 env_check_err "PG_MODE"

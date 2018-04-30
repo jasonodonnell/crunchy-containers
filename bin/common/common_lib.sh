@@ -78,14 +78,3 @@ function echo_info() {
 function echo_warn() {
     echo -e "${YELLOW?}$(date) WARN: ${1?}${RESET?}"
 }
-
-function custom_config() {
-    config=${1?}
-    mode=${2?}
-    dir=${3?}
-    owner=${4?}
-    echo_info "Custom ${config?} detected.  Applying custom configuration.."
-    cp ${config?} ${dir?}
-    chown ${owner?} ${dir?}
-    chmod ${mode?} ${dir?}
-}
