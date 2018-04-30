@@ -22,7 +22,7 @@ ${DIR?}/cleanup.sh
 ${DIR?}/../../ssl-creator.sh "testuser@crunchydata.com" "${CONTAINER_NAME?}" "$(PWD)"
 if [[ $? -ne 0 ]]
 then
-    echo_err "Failed to create certs, exiting.."
+    echo "Failed to create certs, exiting.."
     exit 1
 fi
 
@@ -49,7 +49,7 @@ docker run \
     --env=PG_USER=testuser \
     --env=PG_PASSWORD=password \
     --env=PG_ROOT_PASSWORD=password \
-    --env=XLORDIR=true \
+    --env=XLOGDIR=true \
     --detach crunchydata/crunchy-postgres:centos7-10.3-1.8.2
 
 echo ""

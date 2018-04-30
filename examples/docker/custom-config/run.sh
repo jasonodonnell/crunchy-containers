@@ -44,5 +44,5 @@ docker run \
     --env=PG_USER=testuser \
     --env=PG_PASSWORD=password \
     --env=PG_ROOT_PASSWORD=password \
-    --env=XLORDIR=true \
+    --env=XLOGDIR=true \
     --detach crunchydata/crunchy-postgres:centos7-10.3-1.8.2
