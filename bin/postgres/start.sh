@@ -26,16 +26,14 @@ function trap_sigterm() {
     pg_ctl -w -D $PGDATA -m fast stop
 
     # Unclean shutdowns begin here (if all else fails)
-    if [ -f $PGDATA/postmaster.pid ]; then
-            kill -SIGINT $(head -1 $PGDATA/postmaster.pid) >> $PGDATA/trap.output
+    if [[ -f $PGDATA/postmaster.pid ]]
+    then
+        kill -SIGINT $(head -1 $PGDATA/postmaster.pid) >> $PGDATA/trap.output
     fi
 }
 
 trap 'trap_sigterm' SIGINT SIGTERM
 
-date
-
-source /opt/cpm/bin/setenv.sh
 source check-for-secrets.sh
 
 env_check_err "PG_MODE"
@@ -335,7 +333,7 @@ function initialize_primary() {
         BACKREST_CONF='/pgconf/pgbackrest.conf'
         if [[ -f ${BACKREST_CONF?} ]]; then
             echo_info "Creating stanza.."
-            pgbackrest --log-path=/backrestrepo --config=/pgconf/pgbackrest.conf --stanza=db stanza-create
+            pgbackrest --stanza=db stanza-create
         fi
 
         echo_info "Loading setup.sql.." >> /tmp/start-db.log
@@ -395,7 +393,6 @@ case "$PG_MODE" in
     ;;
 esac
 
-ose_hack
 fill_conf_file
 
 case "$PG_MODE" in
@@ -416,26 +413,19 @@ case "$PG_MODE" in
     ;;
 esac
 
-PGCONF='/pgconf/postgresql.conf'
-echo_info "Starting PostgreSQL.."
-if [[ -f ${PGCONF?} ]]; then
-    echo_info "Setting the postgresql.conf file.."
-    postgres -c config_file=/pgconf/postgresql.conf -c hba_file=/pgconf/pg_hba.conf -D $PGDATA  &
-else
-    postgres -D $PGDATA  &
-fi
-
-date
-
-if [[ -v PGAUDIT_ANALYZE ]]; then
-    echo_info "Starting pgaudit_analyze.."
-    pgaudit_analyze $PGDATA/pg_log --user=postgres --log-file /tmp/pgaudit_analyze.log &
-fi
-
 if [[ ${ENABLE_SSHD} == "true" ]]; then
     echo_info "Applying SSHD.."
     source /opt/cpm/bin/sshd.sh
     start_sshd
+fi
+
+source /opt/cpm/bin/custom-configs.sh
+echo_info "Starting PostgreSQL.."
+postgres -D $PGDATA &
+
+if [[ -v PGAUDIT_ANALYZE ]]; then
+    echo_info "Starting pgaudit_analyze.."
+    pgaudit_analyze $PGDATA/pg_log --user=postgres --log-file /tmp/pgaudit_analyze.log &
 fi
 
 # We will wait indefinitely until "docker stop [container_id]"
