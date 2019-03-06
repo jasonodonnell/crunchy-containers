@@ -37,7 +37,7 @@ ADD bin/collect /opt/cpm/bin
 ADD bin/common /opt/cpm/bin
 ADD conf/collect /opt/cpm/conf
 
-RUN chgrp -R 0 /opt/cpm/bin /opt/cpm/conf && \
+RUN chown -R 2:0 /opt/cpm/bin /opt/cpm/conf && \
     chmod -R g=u /opt/cpm/bin/ opt/cpm/conf
 
 VOLUME ["/conf"]

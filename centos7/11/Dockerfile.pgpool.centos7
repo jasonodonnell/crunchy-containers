@@ -39,9 +39,8 @@ ADD conf/pgpool /opt/cpm/conf
 RUN ln -sf /opt/cpm/conf/pool_hba.conf /etc/pgpool-II-11/pool_hba.conf \
   && ln -sf /opt/cpm/conf/pgpool/pool_passwd /etc/pgpool-II-11/pool_passwd
 
-RUN chgrp -R 0 /opt/cpm && \
+RUN chown -R 2:0 /opt/cpm && \
     chmod -R g=u /opt/cpm
-
 
 # open up the postgres port
 EXPOSE 5432
