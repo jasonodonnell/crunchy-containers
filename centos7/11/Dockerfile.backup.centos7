@@ -14,7 +14,7 @@ LABEL name="crunchydata/backup" \
         io.openshift.expose-services="" \
         io.openshift.tags="crunchy,database"
 
-ENV PGVERSION="11" PGDG_REPO="pgdg-centos11-11-2.noarch.rpm"
+ENV PGVERSION="11" PGDG_REPO="pgdg-redhat-repo-latest.noarch.rpm"
 
 RUN rpm -Uvh https://download.postgresql.org/pub/repos/yum/${PGVERSION}/redhat/rhel-7-x86_64/${PGDG_REPO}
 
@@ -34,13 +34,13 @@ ADD bin/common /opt/cpm/bin
 ADD conf/backup/ /opt/cpm/conf
 
 RUN chown -R postgres:postgres  /opt/cpm /pgdata && \
-        chmod -R g=u /opt/cpm /pgdata 
+        chmod -R g=u /opt/cpm /pgdata
 
 VOLUME ["/pgdata"]
 
 RUN chmod g=u /etc/passwd && \
 	chmod g=u /etc/group
-	
+
 ENTRYPOINT ["opt/cpm/bin/uid_postgres.sh"]
 
 USER 26
